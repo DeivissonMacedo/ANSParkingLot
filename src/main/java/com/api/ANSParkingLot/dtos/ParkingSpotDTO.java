@@ -15,8 +15,6 @@ public class ParkingSpotDTO {
     private String modelVehicle;
     @NotBlank
     private String colorVehicle;
-    @NotBlank
-    private String employeeName;
     @NotNull
     private int employeeRegistrationNumber;
     @NotBlank
@@ -32,13 +30,6 @@ public class ParkingSpotDTO {
         this.guest = guest;
     }
 
-    public @NotBlank String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(@NotBlank String employeeName) {
-        this.employeeName = employeeName;
-    }
 
     public @NotBlank String getColorVehicle() {
         return colorVehicle;

@@ -1,10 +1,10 @@
 package com.api.ANSParkingLot.models;
 
-
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -12,30 +12,26 @@ import java.util.UUID;
 public class ParkingSpotModel implements Serializable {
     private static final long serialVersionUID = 1L;
 
-
-
-
     @Id
-    @GeneratedValue (strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
+
     @Column(nullable = false, unique = true, length = 10)
     private String parkingSpotNumber;
-    @Column(nullable = false, unique = true, length = 7)
-    private String licensePlateVehicle;;
-    @Column(nullable = false, length = 70)
-    private String brandVehicle;;
-    @Column(nullable = false, length = 70)
-    private String modelVehicle;;
-    @Column(nullable = false, length = 70)
-    private String colorVehicle;
-    @Column (nullable = false)
-    private LocalDateTime registrationDate;
-    @Column (nullable = false, length = 150)
-    private String employeeName;
-    @Column (nullable = false,unique = true, length = 6)
-    private int employeeRegistrationNumber;
-    @Column (nullable = false, length = 150)
-    private String guest;
+
+    @Column(nullable = false)
+    private boolean occupied = false;
+
+    @OneToOne(mappedBy = "parkingSpot")
+    @JsonManagedReference
+    private VehicleModel vehicle;
+
+    @OneToOne
+    @JsonBackReference
+    @JoinColumn(name = " employee_registration_number", referencedColumnName = "employee_registration_number")
+    private EmployeeModel employee;
+
+    // Getters e Setters
 
     public UUID getId() {
         return id;
@@ -45,23 +41,6 @@ public class ParkingSpotModel implements Serializable {
         this.id = id;
     }
 
-    public int getEmployeeRegistrationNumber() {
-        return employeeRegistrationNumber;
-    }
-
-    public void setEmployeeRegistrationNumber(int employeeRegistrationNumber) {
-        this.employeeRegistrationNumber = employeeRegistrationNumber;
-    }
-
-    public String getGuest() {
-        return guest;
-    }
-
-    public void setGuest(String guest) {
-        this.guest = guest;
-    }
-
-
     public String getParkingSpotNumber() {
         return parkingSpotNumber;
     }
@@ -70,56 +49,27 @@ public class ParkingSpotModel implements Serializable {
         this.parkingSpotNumber = parkingSpotNumber;
     }
 
-    public String getLicensePlateVehicle() {
-        return licensePlateVehicle;
+    public boolean isOccupied() {
+        return occupied;
     }
 
-    public void setLicensePlateVehicle(String licensePlateVehicle) {
-        this.licensePlateVehicle = licensePlateVehicle;
+    public void setOccupied(boolean occupied) {
+        this.occupied = occupied;
     }
 
-    public String getBrandVehicle() {
-        return brandVehicle;
+    public VehicleModel getVehicle() {
+        return vehicle;
     }
 
-    public void setBrandVehicle(String brandVehicle) {
-        this.brandVehicle = brandVehicle;
+    public void setVehicle(VehicleModel vehicle) {
+        this.vehicle = vehicle;
     }
 
-    public String getModelVehicle() {
-        return modelVehicle;
+    public EmployeeModel getEmployee() {
+        return employee;
     }
 
-    public void setModelVehicle(String modelVehicle) {
-        this.modelVehicle = modelVehicle;
+    public void setEmployee(EmployeeModel employee) {
+        this.employee = employee;
     }
-
-    public String getColorVehicle() {
-        return colorVehicle;
-    }
-
-    public void setColorVehicle(String colorVehicle) {
-        this.colorVehicle = colorVehicle;
-    }
-
-    public LocalDateTime getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(LocalDateTime registrationDate) {
-        this.registrationDate = registrationDate;
-    }
-
-    public String getEmployeeName() {
-        return employeeName;
-    }
-
-    public void setEmployeeName(String employeeName) {
-        this.employeeName = employeeName;
-    }
-
-
-
-
-
 }
