@@ -1,5 +1,6 @@
 package com.api.ANSParkingLot.services;
 
+import com.api.ANSParkingLot.models.EmployeeModel;
 import com.api.ANSParkingLot.models.ParkingSpotModel;
 import com.api.ANSParkingLot.repositories.ParkingSpotRepository;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,10 @@ public class ParkingSpotService {
     public Optional<ParkingSpotModel> findByParkingSpotNumber(String number) {
         return parkingSpotRepository.findByParkingSpotNumber(number);
     }
+    public Optional<ParkingSpotModel> findByEmployee(EmployeeModel employee) {
+        return parkingSpotRepository.findByEmployee(employee);
+    }
+
 
     public ParkingSpotModel save(ParkingSpotModel spot) {
         return parkingSpotRepository.save(spot);

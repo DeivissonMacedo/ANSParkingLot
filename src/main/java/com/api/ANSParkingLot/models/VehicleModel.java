@@ -26,6 +26,7 @@ public class VehicleModel {
     private String color;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name = "employee_registration_number", referencedColumnName = "employee_registration_number")
     private EmployeeModel employee;
 

@@ -1,7 +1,6 @@
 package com.api.ANSParkingLot.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -23,12 +22,10 @@ public class ParkingSpotModel implements Serializable {
     private boolean occupied = false;
 
     @OneToOne(mappedBy = "parkingSpot")
-    @JsonManagedReference
     private VehicleModel vehicle;
 
     @OneToOne
-    @JsonBackReference
-    @JoinColumn(name = " employee_registration_number", referencedColumnName = "employee_registration_number")
+    @JoinColumn(name = "employee_registration_number", referencedColumnName = "employee_registration_number")
     private EmployeeModel employee;
 
     // Getters e Setters

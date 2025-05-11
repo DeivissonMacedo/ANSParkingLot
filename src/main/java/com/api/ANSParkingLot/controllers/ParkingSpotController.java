@@ -78,4 +78,23 @@ public class ParkingSpotController {
 
         return ResponseEntity.ok(parkingSpotService.save(spot));
     }
+
+
+    @GetMapping("/employee/{registrationNumber}")
+    public ResponseEntity<Object> getParkingSpotByEmployeeRegistration(@PathVariable int registrationNumber) {
+        Optional<EmployeeModel> employeeOpt = employeeService.findByEmployeeRegistrationNumber(registrationNumber);
+
+        if (employeeOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Funcionário não encontrado");
+        }
+
+        Optional<ParkingSpotModel> spotOpt = parkingSpotService.findByEmployee(employeeOpt.get());
+
+        if (spotOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nenhuma vaga associada a este funcionário");
+        }
+
+        return ResponseEntity.ok(spotOpt.get());
+    }
+
 }

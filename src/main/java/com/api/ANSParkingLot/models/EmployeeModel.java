@@ -1,24 +1,16 @@
 package com.api.ANSParkingLot.models;
 
-
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "TB_EMPLOYEE")
 public class EmployeeModel {
-    private static final long serialVersionUID = 1L;
-    @OneToOne(mappedBy = "employee")
-    @JsonManagedReference
-    private ParkingSpotModel parkingSpot;
 
-    @OneToOne(mappedBy = "employee")
-    @JsonIgnoreProperties("employee") // evita o loop recursivo
-    private VehicleModel vehicle;
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
@@ -45,6 +37,13 @@ public class EmployeeModel {
     private String birthdate;
 
     private String admissionDate;
+
+    @OneToOne(mappedBy = "employee")
+    @JsonIgnore
+    private ParkingSpotModel parkingSpot;
+
+    @OneToOne(mappedBy = "employee")
+    private VehicleModel vehicle;
 
     // Getters e Setters
 
@@ -100,11 +99,11 @@ public class EmployeeModel {
         return cellphone;
     }
 
-    public void setCellphone(String telefone) {
-        this.cellphone = telefone;
+    public void setCellphone(String cellphone) {
+        this.cellphone = cellphone;
     }
 
-    public String getAddres() {
+    public String getAddress() {
         return address;
     }
 
@@ -136,11 +135,27 @@ public class EmployeeModel {
         this.birthdate = birthdate;
     }
 
-    public String getAdimissionDate() {
+    public String getAdmissionDate() {
         return admissionDate;
     }
 
-    public void setAdimissionDate(String admissionDate) {
+    public void setAdmissionDate(String admissionDate) {
         this.admissionDate = admissionDate;
+    }
+
+    public ParkingSpotModel getParkingSpot() {
+        return parkingSpot;
+    }
+
+    public void setParkingSpot(ParkingSpotModel parkingSpot) {
+        this.parkingSpot = parkingSpot;
+    }
+
+    public VehicleModel getVehicle() {
+        return vehicle;
+    }
+
+    public void setVehicle(VehicleModel vehicle) {
+        this.vehicle = vehicle;
     }
 }

@@ -24,35 +24,51 @@ public class VehicleService {
     private EmployeeRepository employeeRepository;
 
     public VehicleModel save(VehicleModel vehicleModel) {
-        int regNumber = vehicleModel.getEmployee().getEmployeeRegistrationNumber();
+        // Obtém o número de matrícula do funcionário
+        int employeeRegistrationNumber = vehicleModel.getEmployee().getEmployeeRegistrationNumber();
 
-        // Verifica se funcionário existe
-        Optional<EmployeeModel> employeeOpt = employeeRepository.findByEmployeeRegistrationNumber(regNumber);
+        // Verifica se o funcionário existe
+        Optional<EmployeeModel> employeeOpt = employeeRepository.findByEmployeeRegistrationNumber(employeeRegistrationNumber);
         if (employeeOpt.isEmpty()) {
-            throw new RuntimeException("Funcionário com matrícula " +  regNumber+" não encontrado.");
+            throw new RuntimeException("Funcionário com matrícula " + employeeRegistrationNumber + " não encontrado.");
         }
 
-        // Verifica se já tem veículo
-        if (vehicleRepository.existsByEmployee_EmployeeRegistrationNumber(regNumber)) {
-            throw new RuntimeException("Funcionário já possui um veículo cadastrado");
+        // Verifica se o funcionário já tem um veículo
+        if (vehicleRepository.existsByEmployee_EmployeeRegistrationNumber(employeeRegistrationNumber)) {
+            throw new RuntimeException("Funcionário já possui um veículo cadastrado.");
         }
 
-        // Encontra vaga livre
-        Optional<ParkingSpotModel> spotOpt = parkingSpotRepository.findFirstByOccupiedFalse();
-        if (spotOpt.isEmpty()) {
-            throw new RuntimeException("Nenhuma vaga disponível");
+        // Encontra a próxima vaga disponível
+        Optional<ParkingSpotModel> parkingSpotOpt = parkingSpotRepository.findFirstByOccupiedFalse();
+        if (parkingSpotOpt.isEmpty()) {
+            throw new RuntimeException("Nenhuma vaga disponível.");
         }
 
-        // Atribui vaga ao veículo
-        ParkingSpotModel spot = spotOpt.get();
-        spot.setOccupied(true);
-        parkingSpotRepository.save(spot);
+        ParkingSpotModel parkingSpot = parkingSpotOpt.get(); // Aqui garantimos que temos uma vaga disponível
 
-        vehicleModel.setParkingSpot(spot);
+        // Atribui o veículo e o funcionário à vaga
         vehicleModel.setEmployee(employeeOpt.get());
+        vehicleModel.setParkingSpot(parkingSpot);
 
-        return vehicleRepository.save(vehicleModel);
+        // Salva o veículo primeiro
+        vehicleModel = vehicleRepository.save(vehicleModel);
+
+        // Agora que o veículo está salvo, marca a vaga como ocupada
+        parkingSpot.setOccupied(true);
+        parkingSpot.setVehicle(vehicleModel);
+        parkingSpot.setEmployee(employeeOpt.get());
+
+        // Salva a vaga com as novas associações
+        parkingSpotRepository.save(parkingSpot);
+
+        // Retorna o veículo salvo
+        return vehicleModel;
     }
+
+
+
+
+
 
     public Optional<VehicleModel> findById(Long id) {
         return vehicleRepository.findById(id);
