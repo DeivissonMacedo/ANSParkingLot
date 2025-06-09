@@ -16,13 +16,19 @@ public class GuestModel implements Serializable {
     private UUID id;
 
     @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false)
     private String phone;
 
     @Column(nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String vehicle;
+    private String cpf;
+
+    @Column(nullable = false)
+    private String parkingSpotNumber;
 
     @Column(name = "initial_date", nullable = false)
     private LocalDateTime initialDate;
@@ -32,12 +38,12 @@ public class GuestModel implements Serializable {
 
     @PrePersist
     public void prePersist() {
-        if (expireDate == null && initialDate != null) {
-            expireDate = initialDate.toLocalDate().atTime(23, 59, 59);
+        if (this.initialDate != null) {
+            // Define expireDate para 24 horas após initialDate
+            this.expireDate = this.initialDate.plusHours(24);
         }
     }
 
-    // Getters e Setters
 
     public UUID getId() {
         return id;
@@ -45,6 +51,13 @@ public class GuestModel implements Serializable {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getPhone() {
@@ -63,12 +76,12 @@ public class GuestModel implements Serializable {
         this.email = email;
     }
 
-    public String getVehicle() {
-        return vehicle;
+    public String getParkingSpotNumber() {
+        return parkingSpotNumber;
     }
 
-    public void setVehicle(String vehicle) {
-        this.vehicle = vehicle;
+    public void setParkingSpotNumber(String parkingSpotNumber) {
+        this.parkingSpotNumber = parkingSpotNumber;
     }
 
     public LocalDateTime getInitialDate() {
@@ -86,4 +99,7 @@ public class GuestModel implements Serializable {
     public void setExpireDate(LocalDateTime expireDate) {
         this.expireDate = expireDate;
     }
+    public String getCpf() { return cpf; }
+
+    public void setCpf(String cpf) { this.cpf = cpf; }
 }
